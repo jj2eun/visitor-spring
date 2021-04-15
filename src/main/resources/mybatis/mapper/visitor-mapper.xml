@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="visitor">
+ 	<!-- db 컬럼명과 vo객체의 변수명이 다르기 때문에 resultMap사용해 준다 -->
+ 	<resultMap type="VisitorVO" id="VisitorResultMap">
+ 		<result column="v_no" property="vNo"/>
+ 		<result column="v_auth" property="vAuth"/>
+ 		<result column="v_pwd" property="vPwd"/>
+ 		<result column="v_content" property="vContent"/>
+ 		<result column="v_regdt" property="vRegDt"/>
+ 		<result column="v_updatedt" property="vUpdateDt"/>
+ 	</resultMap>
+ 
+ 	<insert id="visitorRegist" parameterType="VisitorVO">
+ 		insert into visitor_tab(v_no, v_auth, v_pwd, v_content) 
+ 		values(visitor_tab_v_no_seq.nextval, #{vAuth}, #{vPwd}, #{vContent})
+ 	</insert>
+	
+	<select id="visitorList" resultMap="VisitorResultMap">
+		select * from visitor_tab order by v_no desc
+	</select>
+	
+	<select id="visitorPasswordCheck"  parameterType="VisitorVO" resultType="int">
+		select count(v_no) from visitor_tab where v_no = #{vNo} and v_pwd = #{vPwd}
+	</select>
+	
+	<update id="visitorUpdate" parameterType="VisitorVO">
+		update visitor_tab set v_content = #{vContent}, v_updatedt = sysdate
+		where v_no = ${vNo}
+	</update>
+	
+	<delete id="visitorDelete" parameterType="int">
+		delete from visitor_tab where v_no = #{vNo}
+	</delete>
+ 
+ </mapper>
